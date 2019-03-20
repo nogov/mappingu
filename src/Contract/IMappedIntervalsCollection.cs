@@ -12,6 +12,6 @@ namespace Contract
 
         void Delete(long from, long to);
 
-        IEnumerator<MappedInterval<TPayload>> GetEnumerator(long from, long to);
+        IEnumerator<MappedInterval<TPayload>> GetEnumerator(long from);
     }
 }
