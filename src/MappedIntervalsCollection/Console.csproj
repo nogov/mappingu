@@ -100,7 +100,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Benchmarks.cs" />
+    <Compile Include="Benchmarks\Overlapping.cs" />
+    <Compile Include="Benchmarks\CollectionFactories.cs" />
+    <Compile Include="Benchmarks\Driver.cs" />
+    <Compile Include="Benchmarks\ReferenceCrate.cs" />
+    <Compile Include="Benchmarks\SinglePutScenarios.cs" />
+    <Compile Include="Benchmarks\Sorting.cs" />
+    <Compile Include="Benchmarks\ValueCrate.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="MefDlyaBednyx.cs" />
     <Compile Include="Program.cs" />

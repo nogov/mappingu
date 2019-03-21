@@ -10,10 +10,10 @@ namespace Console
             var logger = new ConsoleLogger();
             var plugins = MefDlyaBednyx.GetPlugins(logger).ToArray();
 
-            var tests = new Tests.Suite(logger, plugins);
-            tests.Run();
+            /*var tests = new Tests.Suite(logger, plugins);
+            tests.Run();*/
 
-            var benchmarks = new Benchmarks(plugins);
+            var benchmarks = new Benchmarks.Driver(logger, plugins);
             benchmarks.Run();
 
             System.Console.ReadKey();
