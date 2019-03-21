@@ -1,18 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Contract;
 using NUnit.Framework;
 
 namespace Tests
 {
-    public abstract class MappedIntervalsCollectionFixtureBase
+    [TestFixtureSource(typeof(CollectionFactories), nameof(CollectionFactories.Factories))]
+    internal sealed class MappedIntervalsCollectionFixture
     {
+        private readonly Func<IMappedIntervalsCollection<Crate>> _factory;
+
         private IMappedIntervalsCollection<Crate> _sut;
+
+        public MappedIntervalsCollectionFixture(Func<IMappedIntervalsCollection<Crate>> factory)
+        {
+            _factory = factory;
+        }
 
         [SetUp]
         public void SetUp()
         {
-            _sut = CreateSut();
+            _sut = _factory();
         }
 
         [Test]
@@ -98,9 +107,7 @@ namespace Tests
             CollectionAssert.AreEqual(part, later);
         }
 
-        protected abstract IMappedIntervalsCollection<Crate> CreateSut();
-
-        protected static IEnumerable<MappedInterval<T>> CollectFrom<T>(IMappedIntervalsCollection<T> collection, long from)
+        private static IEnumerable<MappedInterval<T>> CollectFrom<T>(IMappedIntervalsCollection<T> collection, long from)
         {
             using (var e = collection.GetEnumerator(from))
             {
@@ -111,19 +118,10 @@ namespace Tests
             }
         }
 
-        protected static Crate MakeDummy(int value)
+        private static Crate MakeDummy(int value)
         {
             return new Crate(value);
         }
 
-        protected sealed class Crate
-        {
-            public Crate(int value)
-            {
-                Value = value;
-            }
-
-            public int Value { get; }
-        }
     }
 }

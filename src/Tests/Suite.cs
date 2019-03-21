@@ -23,12 +23,20 @@ namespace Tests
                 return;
             }
 
-            _logger.Info(FormattableString.Invariant($"Going to run tests for {_plugins.Count} plugin (s)."));
-            foreach (var p in _plugins)
+            try
             {
-                _logger.Info(FormattableString.Invariant($"* Running {p.Name} tests..."));
-                var failures = new AutoRun(p.GetType().Assembly).Execute(new string[0]);
+                foreach (var p in _plugins)
+                {
+                    _logger.Info(FormattableString.Invariant($"* Registered {p.Name} factory."));
+                    CollectionFactories.RegisterFactory(() => p.CreateCollection<Crate>());
+                }
+                _logger.Info("Running tests...");
+                var failures = new AutoRun().Execute(new string[0]);
                 _logger.Info(FormattableString.Invariant($"Failures: {failures}."));
+            }
+            finally 
+            {
+                CollectionFactories.Cleanup();
             }
         }
     }

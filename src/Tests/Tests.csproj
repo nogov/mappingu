@@ -51,8 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollectionFactories.cs" />
+    <Compile Include="Crate.cs" />
     <Compile Include="IntervalGeneration.cs" />
-    <Compile Include="MappedIntervalsCollectionFixtureBase.cs" />
+    <Compile Include="MappedIntervalsCollectionFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Suite.cs" />
   </ItemGroup>
