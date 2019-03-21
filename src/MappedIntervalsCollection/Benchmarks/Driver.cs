@@ -34,7 +34,10 @@ namespace Console.Benchmarks
                     CollectionBag.Register(new CollectionDescription(p));
                 }
                 _logger.Info("Running benchmarks...");
+
                 BenchmarkRunner.Run<SinglePutScenarios<ValueCrate<int>>>();
+                BenchmarkRunner.Run<SingleDeleteScenarios<ValueCrate<int>>>();
+                BenchmarkRunner.Run<DeleteScenarios<ValueCrate<int>>>();
             }
             finally
             {

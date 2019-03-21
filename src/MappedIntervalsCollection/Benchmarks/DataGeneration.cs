@@ -5,12 +5,15 @@ namespace Console.Benchmarks
 {
     internal sealed class DataGeneration
     {
-        public static void Fill<TPayload>(MappedInterval<TPayload>[] input, Sorting sorting, Overlapping overlapping, TPayload filler)
+        public static Tuple<long, long> Fill<TPayload>(MappedInterval<TPayload>[] input, Sorting sorting, Overlapping overlapping, TPayload filler)
         {
             var count = input.Length;
             var start = 0L;
             var duration = 10L;
             var step = overlapping == Overlapping.Yes ? duration >> 1 : duration << 1;
+
+            var min = long.MaxValue;
+            var max = long.MinValue;
 
             switch (sorting)
             {
@@ -23,6 +26,9 @@ namespace Console.Benchmarks
 
                     while (from != to)
                     {
+                        min = Math.Min(min, start);
+                        max = Math.Max(max, start + duration);
+
                         input[from] = new MappedInterval<TPayload>(start, start + duration, filler);
                         start += step;
                         from += delta;
@@ -39,12 +45,16 @@ namespace Console.Benchmarks
                     {
                         var s = r.Next(0, int.MaxValue);
                         var d = r.Next(durationFrom, durationTo);
-                        input[i] = new MappedInterval<TPayload>(s, d, filler);   
+                        min = Math.Min(min, s);
+                        max = Math.Max(max, s + d);
+                        input[i] = new MappedInterval<TPayload>(s, s + d, filler);   
                     }
 
                     break;
                 }
             }
+
+            return Tuple.Create(min, max);
         }
     }
 }

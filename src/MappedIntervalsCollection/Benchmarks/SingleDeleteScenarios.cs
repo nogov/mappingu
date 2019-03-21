@@ -1,14 +1,14 @@
-﻿using System.Linq;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using Contract;
 
 namespace Console.Benchmarks
 {
     [InProcess] // It is now run in-process only, as separate executable won't load plugins and fail.
-    public class SinglePutScenarios<TPayload> : CollectionBenchmarkBase<TPayload>
+    public class SingleDeleteScenarios<TPayload> : CollectionBenchmarkBase<TPayload>
         where TPayload : new()
     {
         private MappedInterval<TPayload>[] _input;
+        private long _min, _max;
 
         [Params(Sorting.Ascending)]
         //[ParamsAllValues]
@@ -26,19 +26,20 @@ namespace Console.Benchmarks
         public void Setup()
         {
             _input = new MappedInterval<TPayload>[Count];
-            DataGeneration.Fill(_input, InputSorting, InputOverlapping, new TPayload());
+            var mm = DataGeneration.Fill(_input, InputSorting, InputOverlapping, new TPayload());
+            _min = mm.Item1 - Nudge(mm.Item1);
+            _max = mm.Item2 + Nudge(mm.Item2);
         }
 
         [Benchmark]
         public void Work()
         {
-            var collection = Collection;
-            var box = new MappedInterval<TPayload>[1];
-            for (var i = 0; i < _input.Length; ++i)
-            {
-                box[0] = _input[i];
-                collection.Put(box);
-            }
+            Collection.Delete(_min, _max);
+        }
+
+        private static long Nudge(long value)
+        {
+            return (long)(value * 0.05);
         }
     }
 }

@@ -100,11 +100,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmarks\CollectionBenchmarkBase.cs" />
     <Compile Include="Benchmarks\DataGeneration.cs" />
     <Compile Include="Benchmarks\Overlapping.cs" />
     <Compile Include="Benchmarks\CollectionFactories.cs" />
     <Compile Include="Benchmarks\Driver.cs" />
+    <Compile Include="Benchmarks\PreDeleteState.cs" />
     <Compile Include="Benchmarks\ReferenceCrate.cs" />
+    <Compile Include="Benchmarks\DeleteScenarios.cs" />
+    <Compile Include="Benchmarks\SingleDeleteScenarios.cs" />
     <Compile Include="Benchmarks\SinglePutScenarios.cs" />
     <Compile Include="Benchmarks\Sorting.cs" />
     <Compile Include="Benchmarks\ValueCrate.cs" />
