@@ -24,12 +24,9 @@ namespace DummyPlugin
             return GetEnumerator();
         }
 
-        public int Count
-        {
-            get { return _sortedSet.Count; }
-        }
+        public int Count => _sortedSet.Count;
 
-        public void Put(IEnumerable<MappedInterval<T>> newIntervals)
+        public void Put(IReadOnlyList<MappedInterval<T>> newIntervals)
         {
             foreach (var mappedInterval in newIntervals)
             {

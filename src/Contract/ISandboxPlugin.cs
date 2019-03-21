@@ -2,7 +2,7 @@
 {
     public abstract class SandboxPlugin
     {
-        public SandboxPlugin()
+        protected SandboxPlugin()
         {
         }
 
