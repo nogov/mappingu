@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarks.cs" />
+    <Compile Include="ConsoleLogger.cs" />
     <Compile Include="MefDlyaBednyx.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

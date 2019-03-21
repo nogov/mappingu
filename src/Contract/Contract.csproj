@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILogger.cs" />
     <Compile Include="IMappedIntervalsCollection.cs" />
     <Compile Include="ISandboxPlugin.cs" />
     <Compile Include="MappedInterval.cs" />

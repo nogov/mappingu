@@ -9,7 +9,7 @@ namespace MappedIntervalsCollection
 {
     internal static class MefDlyaBednyx
     {
-        public static IEnumerable<SandboxPlugin> GetPlugins()
+        public static IEnumerable<SandboxPlugin> GetPlugins(ILogger logger)
         {
             var executingDir = Path.GetDirectoryName(new Uri(Assembly.GetEntryAssembly().CodeBase).AbsolutePath);
             var pluginsDir = Path.Combine(executingDir, "plugins");
@@ -20,7 +20,7 @@ namespace MappedIntervalsCollection
                 var types = assembly.GetTypes().Where(type => typeof(SandboxPlugin).IsAssignableFrom(type));
                 foreach (var type in types)
                 {
-                    yield return (SandboxPlugin)Activator.CreateInstance(type);
+                    yield return (SandboxPlugin)Activator.CreateInstance(type, logger);
                 }
             }
         }

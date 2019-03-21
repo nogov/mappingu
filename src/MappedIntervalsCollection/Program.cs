@@ -3,11 +3,12 @@ using MappedIntervalsCollection;
 
 namespace Console
 {
-    class Program
+    internal sealed class Program
     {
         static void Main(string[] args)
         {
-            var plugins = MefDlyaBednyx.GetPlugins().ToArray();
+            var logger = new ConsoleLogger();
+            var plugins = MefDlyaBednyx.GetPlugins(logger).ToArray();
 
             var tests = new Tests.Suite(plugins);
             tests.Run();
