@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
-using BenchmarkDotNet.Running;
 using Contract;
+using NUnitLite;
 
-namespace Console
+namespace Tests
 {
-    internal sealed class Benchmarks
+    public sealed class Suite
     {
         private readonly IReadOnlyCollection<SandboxPlugin> _plugins;
 
-        public Benchmarks(IReadOnlyCollection<SandboxPlugin> plugins)
+        public Suite(IReadOnlyCollection<SandboxPlugin> plugins)
         {
             _plugins = plugins;
         }
 
         public void Run()
         {
-            BenchmarkRunner.Run<Benchmarks>();
+            var failures = new AutoRun().Execute(new string[0]);
         }
     }
 }

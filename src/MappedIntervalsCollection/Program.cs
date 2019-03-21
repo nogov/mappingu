@@ -8,6 +8,10 @@ namespace Console
         static void Main(string[] args)
         {
             var plugins = MefDlyaBednyx.GetPlugins().ToArray();
+
+            var tests = new Tests.Suite(plugins);
+            tests.Run();
+
             var benchmarks = new Benchmarks(plugins);
             benchmarks.Run();
 

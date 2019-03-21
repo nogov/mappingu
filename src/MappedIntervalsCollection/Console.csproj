@@ -110,6 +110,10 @@
       <Project>{661D993C-5307-4E5E-95A0-2128515E1F5E}</Project>
       <Name>Contract</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tests\Tests.csproj">
+      <Project>{a8371012-0ef3-4bc2-9047-2753e9975ab1}</Project>
+      <Name>Tests</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.1\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
