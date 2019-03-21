@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Contract;
 
 namespace Tests
@@ -8,6 +9,7 @@ namespace Tests
     {
         public static IEnumerable<MappedInterval<T>> DashedSequence<T>(long from, long step, int count, Func<int, T> makePayload)
         {
+            Debug.Assert(step > 1);
             return Sequence(from, step >> 1, step, count, makePayload);
         }
 

@@ -27,7 +27,7 @@ namespace Tests
         [Test]
         public void NonOverwritingUpdate()
         {
-            var input = IntervalGeneration.DashedSequence(0, 1, 10, MakeDummy).ToArray();
+            var input = IntervalGeneration.DashedSequence(0, 2, 10, MakeDummy).ToArray();
 
             _sut.Put(input);
 
