@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Validators;
 using Contract;
 
 namespace Console.Benchmarks
@@ -28,14 +31,14 @@ namespace Console.Benchmarks
                 foreach (var p in _plugins)
                 {
                     _logger.Info(FormattableString.Invariant($"* Registered {p.Name} factory."));
-                    CollectionFactories.RegisterFactory(new CollectionFactory(p));
+                    CollectionBag.Register(new CollectionDescription(p));
                 }
                 _logger.Info("Running benchmarks...");
                 BenchmarkRunner.Run<SinglePutScenarios<ValueCrate<int>>>();
             }
             finally
             {
-                CollectionFactories.Cleanup();
+                CollectionBag.Cleanup();
             }
         }
     }

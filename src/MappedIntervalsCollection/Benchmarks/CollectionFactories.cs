@@ -3,11 +3,11 @@ using Contract;
 
 namespace Console.Benchmarks
 {
-    internal sealed class CollectionFactory
+    public sealed class CollectionDescription
     {
         private readonly SandboxPlugin _plugin;
 
-        public CollectionFactory(SandboxPlugin plugin)
+        public CollectionDescription(SandboxPlugin plugin)
         {
             _plugin = plugin;
         }
@@ -16,22 +16,27 @@ namespace Console.Benchmarks
         {
             return _plugin.CreateCollection<T>();
         }
+
+        public override string ToString()
+        {
+            return _plugin.Name;
+        }
     }
 
-    internal static class CollectionFactories
+    internal static class CollectionBag
     {
-        private static readonly List<CollectionFactory> Storage = new List<CollectionFactory>();
+        private static readonly List<CollectionDescription> Storage = new List<CollectionDescription>();
 
-        public static void RegisterFactory(CollectionFactory factory)
+        public static IEnumerable<CollectionDescription> Collections => Storage;
+
+        public static void Register(CollectionDescription c)
         {
-            Storage.Add(factory);
+            Storage.Add(c);
         }
 
         public static void Cleanup()
         {
             Storage.Clear();
         }
-
-        public static IEnumerable<CollectionFactory> Factories => Storage;
     }
 }

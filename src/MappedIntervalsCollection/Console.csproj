@@ -100,6 +100,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmarks\DataGeneration.cs" />
     <Compile Include="Benchmarks\Overlapping.cs" />
     <Compile Include="Benchmarks\CollectionFactories.cs" />
     <Compile Include="Benchmarks\Driver.cs" />

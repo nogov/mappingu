@@ -1,78 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using Contract;
 
 namespace Console.Benchmarks
 {
+    [InProcess] // It is now run in-process only, as separate executable won't load plugins and fail.
     public class SinglePutScenarios<TPayload> where TPayload : new()
     {
+        private IMappedIntervalsCollection<TPayload> _collection;
         private MappedInterval<TPayload>[] _input;
 
-        [Params(Sorting.Ascending, Sorting.Descending, Sorting.Random)]
+        [Params(Sorting.Ascending)]
+        //[ParamsAllValues]
         public Sorting InputSorting { get; set; }
 
-        [Params(Overlapping.No, Overlapping.Yes)]
+        [Params(Overlapping.No)]
+        //[ParamsAllValues]
         public Overlapping InputOverlapping { get; set; }
 
-        [Params(100, 1000)]
+        [Params(10)]
+        //[Params(100, 1000)]
         public int Count { get; set; }
+
+        [ParamsSource(nameof(CreateCollections))]
+        public CollectionDescription Description { get; set; }
+
+        [IterationSetup]
+        public void IterationSetup()
+        {
+            _collection = Description.Create<TPayload>();
+        }
 
         [GlobalSetup]
         public void Setup()
         {
-            var dummy = new TPayload();
-
-            var start = 0L;
-            var duration = 10L;
-            var step = InputOverlapping == Overlapping.Yes ? duration >> 1 : duration << 1;
-
             _input = new MappedInterval<TPayload>[Count];
-            switch (InputSorting)
-            {
-                case Sorting.Ascending:
-                case Sorting.Descending:
-                {
-                    if (InputSorting == Sorting.Descending)
-                    {
-                        step *= -1;
-                    }
-
-                    for (var i = 0; i < Count; ++i)
-                    {
-                        _input[i] = new MappedInterval<TPayload>(start, start + duration, dummy);
-                        start += step;
-                    }
-
-                    break;
-                }
-                case Sorting.Random:
-                {
-                    var durationFrom = (int)(duration - duration * 0.2);
-                    var durationTo = (int)(duration + duration * 0.2);
-                    var r = new Random(0xDEAD);
-                    for (var i = 0; i < Count; ++i)
-                    {
-                        var s = r.Next(0, int.MaxValue);
-                        var d = r.Next(durationFrom, durationTo);
-                        _input[i] = new MappedInterval<TPayload>(s, d, dummy);   
-                    }
-
-                    break;
-                }
-            }
+            DataGeneration.Fill(_input, InputSorting, InputOverlapping, new TPayload());
         }
 
         [Benchmark]
-        [ArgumentsSource(nameof(CreateCollections))]
-        public void Single_Ordered_NonOverlapping(IMappedIntervalsCollection<TPayload> collection)
+        public void Single_Ordered_NonOverlapping()
         {
+            var collection = _collection;
+            var box = new MappedInterval<TPayload>[1];
+            for (var i = 0; i < _input.Length; ++i)
+            {
+                box[0] = _input[i];
+                collection.Put(box);
+            }
         }
 
         public static IEnumerable<object> CreateCollections()
         {
-            return CollectionFactories.Factories.Select(f => f.Create<TPayload>());
+            return CollectionBag.Collections;
         }
     }
 }
