@@ -33,6 +33,11 @@ namespace Tests
                 _logger.Info("Running tests...");
                 var failures = new AutoRun().Execute(new string[0]);
                 _logger.Info(FormattableString.Invariant($"Failures: {failures}."));
+
+                if (failures > 0)
+                {
+                    throw new InvalidOperationException("Please fix!");
+                }
             }
             finally 
             {
