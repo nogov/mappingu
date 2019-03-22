@@ -48,9 +48,8 @@ namespace Tests
             }
 
             var output = _sut.ToArray();
-            Assert.That(output.Length, Is.EqualTo(1));
-            Assert.That(output[0].IntervalStart, Is.EqualTo(input[0].IntervalStart));
-            Assert.That(output[0].IntervalEnd, Is.EqualTo(input[input.Length - 1].IntervalEnd));
+            var expectedOutput = IntervalGeneration.Sequence(0, 5, 5, input.Length - 1, i => input[i].Payload).Concat(input.Skip(input.Length - 1));
+            CollectionAssert.AreEqual(expectedOutput, output);
         }
 
         [TestCase(0)]
