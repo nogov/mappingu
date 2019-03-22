@@ -37,21 +37,34 @@ namespace DummyPlugin
 
         public void Delete(long from, long to)
         {
-            var ololol = _sortedSet.GetViewBetween(new Hueta(new MappedInterval<T>(from, from, default(T)), true), new Hueta(_sortedSet.Max.Interval, false));
-            if (ololol.Min.Start < from)
+            var ololol = _sortedSet.GetViewBetween(new Hueta(new MappedInterval<T>(from, from, default(T)), true), new Hueta(new MappedInterval<T>(to, to, default(T)), false));
+            var olololStart = 0;
+            var olololEnd = ololol.Count;
+            if (ololol.Count > 0)
             {
-                _sortedSet.Remove(ololol.Min);
-                _sortedSet.Add(new Hueta(new MappedInterval<T>(ololol.Min.Start, from, ololol.Min.Interval.Payload), null));
-                ololol.Remove(ololol.Min);
-            }
-            if (ololol.Max.End > to)
-            {
-                _sortedSet.Remove(ololol.Max);
-                _sortedSet.Add(new Hueta(new MappedInterval<T>(to, ololol.Max.End, ololol.Max.Interval.Payload), null));
-                ololol.Remove(ololol.Max);
-            }
+                var olololMin = ololol.Min;
+                var olololMax = ololol.Max;
+                var toAdd = new List<Hueta>(2);
 
-            _sortedSet.ExceptWith(ololol);
+                if (olololMin.Start < from)
+                {
+                    _sortedSet.Remove(olololMin);
+                    toAdd.Add(new Hueta(new MappedInterval<T>(olololMin.Start, from, olololMin.Interval.Payload), null));
+                    olololStart++;
+                }
+                if (olololMax.End > to)
+                {
+                    _sortedSet.Remove(olololMax);
+                    toAdd.Add(new Hueta(new MappedInterval<T>(to, olololMax.End, olololMax.Interval.Payload), null));
+                    olololEnd--;
+                }
+
+                _sortedSet.ExceptWith(ololol.Skip(olololStart).Take(olololEnd - olololStart));
+                foreach (var hueta in toAdd)
+                {
+                    _sortedSet.Add(hueta);
+                }
+            }
         }
 
         public IEnumerator<MappedInterval<T>> GetEnumerator(long from)
