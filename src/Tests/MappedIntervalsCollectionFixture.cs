@@ -99,7 +99,7 @@ namespace Tests
             _sut.Put(input);
 
             var from = (duration + step) * intervalsToSkip + margin;
-            var later = input.Where(i => i.IntervalStart >= from).ToArray();
+            var later = input.Where(i => i.IntervalEnd >= from).ToArray();
 
             var part = CollectFrom(_sut, from).ToArray();
             Assert.That(part.Length, Is.EqualTo(later.Length));
