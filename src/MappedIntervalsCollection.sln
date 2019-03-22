@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{609F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A8371012-0EF3-4BC2-9047-2753E9975AB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DenysPlugin", "DenysPlugin\DenysPlugin.csproj", "{416E16BB-0199-4111-B952-A7A9AA2C9702}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DenysPlugin", "plugins\DenysPlugin\DenysPlugin.csproj", "{416E16BB-0199-4111-B952-A7A9AA2C9702}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

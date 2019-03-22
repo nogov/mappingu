@@ -46,7 +46,7 @@
     <Compile Include="Storage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Contract\Contract.csproj">
+    <ProjectReference Include="..\..\Contract\Contract.csproj">
       <Project>{661d993c-5307-4e5e-95a0-2128515e1f5e}</Project>
       <Name>Contract</Name>
     </ProjectReference>
