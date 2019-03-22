@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Contract
 {
+    [DebuggerDisplay("{" + nameof(IntervalStart) + "}-{" + nameof(IntervalEnd) + "}")]
     public struct MappedInterval<TPayload> : IEquatable<MappedInterval<TPayload>>
     {
         public MappedInterval(long intervalStart, long intervalEnd, TPayload payload)
@@ -48,6 +50,11 @@ namespace Contract
         public static bool operator !=(MappedInterval<TPayload> left, MappedInterval<TPayload> right)
         {
             return !left.Equals(right);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}-{1}", IntervalStart, IntervalEnd);
         }
     }
 }
