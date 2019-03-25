@@ -35,7 +35,7 @@ namespace Console.Benchmarks
             if (RealLikeGenerators.TryGetValue(Tuple.Create(dataSource, dataFilter), out var description))
             {
                 MakeSpacedIntervals(description, makePayload, output);
-                return Tuple.Create(output[0].IntervalStart, output[output.Length].IntervalEnd);
+                return Tuple.Create(output[0].IntervalStart, output[output.Length - 1].IntervalEnd);
             }
             throw new ArgumentException(FormattableString.Invariant($"Can't find desired data generator for {dataSource}/{dataFilter}."), nameof(dataSource) + "/" + nameof(dataFilter));
         }
