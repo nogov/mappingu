@@ -1,44 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
 using Contract;
 
 namespace Console.Benchmarks
 {
+    public enum DataSource
+    {
+        Glasses2 = 0,
+        Spectrum,
+    }
+
+    public enum DataFilter
+    {
+        Raw = 0,
+        IvtFixation,
+        IvtAttention,
+    }
+
     internal sealed class DataGeneration
     {
-        public static Tuple<long, long> LikeIvtAttentionGlasses<TPayload>(Func<int, TPayload> makePayload, MappedInterval<TPayload>[] output)
+        private static readonly Dictionary<Tuple<DataSource, DataFilter>, Description> RealLikeGenerators = new Dictionary<Tuple<DataSource, DataFilter>, Description>
         {
-            MakeSpacedIntervals(Tuple.Create(100, 700), Tuple.Create(18, 25), makePayload, output);
-            return Tuple.Create(output[0].IntervalStart, output[output.Length].IntervalEnd);
-        }
+            { Tuple.Create(DataSource.Glasses2, DataFilter.Raw),          new Description( 10,  10, 19, 20) },
+            { Tuple.Create(DataSource.Glasses2, DataFilter.IvtAttention), new Description(100, 700, 18, 25) },
+            { Tuple.Create(DataSource.Glasses2, DataFilter.IvtFixation),  new Description(120, 500, 40, 50) },
 
-        public static Tuple<long, long> LikeIvtFixationGlasses<TPayload>(Func<int, TPayload> makePayload, MappedInterval<TPayload>[] output)
-        {
-            MakeSpacedIntervals(Tuple.Create(120, 500), Tuple.Create(40, 50), makePayload, output);
-            return Tuple.Create(output[0].IntervalStart, output[output.Length].IntervalEnd);
-        }
+            { Tuple.Create(DataSource.Spectrum, DataFilter.Raw),          new Description(  2,    3,  2,  3) },
+            { Tuple.Create(DataSource.Spectrum, DataFilter.IvtAttention), new Description(120, 1600, 10, 75) },
+            { Tuple.Create(DataSource.Spectrum, DataFilter.IvtFixation),  new Description(120,  600, 15, 80) },
+        };
 
-        public static Tuple<long, long> LikeRawGlasses<TPayload>(Func<int, TPayload> makePayload, MappedInterval<TPayload>[] output)
+        public static Tuple<long, long> LikeReal<TPayload>(DataSource dataSource, DataFilter dataFilter, Func<int, TPayload> makePayload, MappedInterval<TPayload>[] output)
         {
-            MakeSpacedIntervals(Tuple.Create(10, 10), Tuple.Create(19, 20), makePayload, output);
-            return Tuple.Create(output[0].IntervalStart, output[output.Length].IntervalEnd);
-        }
-
-        public static Tuple<long, long> LikeIvtAttentionSpectrum<TPayload>(Func<int, TPayload> makePayload, MappedInterval<TPayload>[] output)
-        {
-            MakeSpacedIntervals(Tuple.Create(120, 1500), Tuple.Create(10, 75), makePayload, output);
-            return Tuple.Create(output[0].IntervalStart, output[output.Length].IntervalEnd);
-        }
-
-        public static Tuple<long, long> LikeIvtFixationSpectrum<TPayload>(Func<int, TPayload> makePayload, MappedInterval<TPayload>[] output)
-        {
-            MakeSpacedIntervals(Tuple.Create(120, 600), Tuple.Create(15, 80), makePayload, output);
-            return Tuple.Create(output[0].IntervalStart, output[output.Length].IntervalEnd);
-        }
-
-        public static Tuple<long, long> LikeSpectrumRaw<TPayload>(Func<int, TPayload> makePayload, MappedInterval<TPayload>[] output)
-        {
-            MakeSpacedIntervals(Tuple.Create(2, 3), Tuple.Create(2, 3), makePayload, output);
-            return Tuple.Create(output[0].IntervalStart, output[output.Length].IntervalEnd);
+            if (RealLikeGenerators.TryGetValue(Tuple.Create(dataSource, dataFilter), out var description))
+            {
+                MakeSpacedIntervals(description, makePayload, output);
+                return Tuple.Create(output[0].IntervalStart, output[output.Length].IntervalEnd);
+            }
+            throw new ArgumentException(FormattableString.Invariant($"Can't find desired data generator for {dataSource}/{dataFilter}."), nameof(dataSource) + "/" + nameof(dataFilter));
         }
 
         public static Tuple<long, long> Fill<TPayload>(Sorting sorting, Overlapping overlapping, TPayload filler, MappedInterval<TPayload>[] output)
@@ -93,11 +92,7 @@ namespace Console.Benchmarks
             return Tuple.Create(min, max);
         }
 
-        private static void MakeSpacedIntervals<TPayload>(
-            Tuple<int, int> intervalRange,
-            Tuple<int, int> gapRange,
-            Func<int, TPayload> makePayload,
-            MappedInterval<TPayload>[] output)
+        private static void MakeSpacedIntervals<TPayload>(Description description, Func<int, TPayload> makePayload, MappedInterval<TPayload>[] output)
         {
             var r = new Random(0xBADDAD);
 
@@ -111,9 +106,22 @@ namespace Console.Benchmarks
                 output[i] = new MappedInterval<TPayload>(from, to, makePayload(i));
             }
 
-            int MakeInterval() => r.Next(intervalRange.Item1, intervalRange.Item2);
-            int MakeGap() => r.Next(gapRange.Item1, gapRange.Item2);
+            int MakeInterval() => r.Next(description.IntervalRange.Item1, description.IntervalRange.Item2);
+            int MakeGap() => r.Next(description.GapRange.Item1, description.GapRange.Item2);
             long ToUsec(int msec) => msec * 1000 - r.Next(0, 3);
+        }
+
+        private sealed class Description
+        {
+            public Description(int intervalMin, int intervalMax, int gapMin, int gapMax)
+            {
+                IntervalRange = Tuple.Create(intervalMin, intervalMax);
+                GapRange = Tuple.Create(gapMin, gapMax);
+            }
+
+            public Tuple<int, int> IntervalRange { get; }
+
+            public Tuple<int, int> GapRange { get; }
         }
     }
 

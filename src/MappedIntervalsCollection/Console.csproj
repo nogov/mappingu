@@ -106,6 +106,7 @@
     <Compile Include="Benchmarks\CollectionFactories.cs" />
     <Compile Include="Benchmarks\Driver.cs" />
     <Compile Include="Benchmarks\PreDeleteState.cs" />
+    <Compile Include="Benchmarks\RealSinglePutScenarios.cs" />
     <Compile Include="Benchmarks\ReferenceCrate.cs" />
     <Compile Include="Benchmarks\DeleteScenarios.cs" />
     <Compile Include="Benchmarks\SingleDeleteScenarios.cs" />

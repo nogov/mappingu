@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
-using BenchmarkDotNet.Validators;
 using Contract;
 
 namespace Console.Benchmarks
@@ -38,6 +35,8 @@ namespace Console.Benchmarks
                 BenchmarkRunner.Run<SinglePutScenarios<ValueCrate<int>>>();
                 BenchmarkRunner.Run<SingleDeleteScenarios<ValueCrate<int>>>();
                 BenchmarkRunner.Run<DeleteScenarios<ValueCrate<int>>>();
+
+                BenchmarkRunner.Run<RealSinglePutScenarios<ValueCrate<int>>>();
             }
             finally
             {
