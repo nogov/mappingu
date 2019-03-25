@@ -55,6 +55,7 @@
     <Compile Include="Crate.cs" />
     <Compile Include="IntervalGeneration.cs" />
     <Compile Include="MappedIntervalsCollectionFixture.cs" />
+    <Compile Include="MappedIntervalsCollectionRealLikeDataFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Suite.cs" />
   </ItemGroup>
