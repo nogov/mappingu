@@ -49,7 +49,7 @@ namespace Console.Benchmarks
             Shuffle(ranges, _ranges);
         }
 
-        [Benchmark]
+        [Benchmark(Baseline = true)]
         public void Ascending()
         {
             var whole = new Tuple<int, int>[1];
@@ -83,6 +83,16 @@ namespace Console.Benchmarks
         public void RandomDescendingSeries()
         {
             AddSeries(_descending, _ranges);
+        }
+
+        [Benchmark]
+        public void RandomBatchedSeries()
+        {
+            var collection = Collection;
+            foreach (var range in _ranges)
+            {
+                collection.Put(new ArraySegment<MappedInterval<TPayload>>(_ascending, range.Item1, range.Item2 - range.Item1));
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

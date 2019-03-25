@@ -16,14 +16,12 @@ namespace DenysPlugin
         {
             PrepareNextGeneration();
             _current.AddRange(Rebuild(_old, newIntervals));
-            //_intervals = Rebuild(_intervals, newIntervals).ToArray();
         }
 
         public void Delete(long from, long to)
         {
             PrepareNextGeneration();
             _current.AddRange(Slice(_old, from, to));
-            //_intervals = Slice(_intervals, from, to).ToArray();
         }
 
         public IEnumerator<MappedInterval<T>> GetEnumerator(long from)
@@ -83,9 +81,76 @@ namespace DenysPlugin
             }
         }
 
+        private static IEnumerable<MappedInterval<T>> GhettoMergeSort(IReadOnlyList<MappedInterval<T>> current, IReadOnlyList<MappedInterval<T>> addition)
+        {
+            using (var existingEnumerator = current.GetEnumerator())
+            using (var addedEnumerator = addition.GetEnumerator())
+            {
+                IEnumerator<MappedInterval<T>> tail;
+
+                MappedInterval<T>? existing = null;
+                MappedInterval<T>? added = null;
+
+                while (true)
+                {
+                    if (!existing.HasValue)
+                    {
+                        if (!existingEnumerator.MoveNext())
+                        {
+                            tail = addedEnumerator;
+                            break;
+                        }
+                        existing = existingEnumerator.Current;
+                    }
+
+                    while (addedEnumerator.MoveNext())
+                    {
+                        added = addedEnumerator.Current;
+
+                        if (added.Value.IntervalStart < existing.Value.IntervalStart)
+                        {
+                            yield return added.Value;
+                            added = null;
+                            continue;
+                        }
+                        break;
+                    }
+
+                    if (!added.HasValue)
+                    {
+                        tail = existingEnumerator;
+                        break;
+                    }
+
+                    yield return existing.Value;
+                    existing = null;
+
+                    while (existingEnumerator.MoveNext())
+                    {
+                        existing = existingEnumerator.Current;
+                        if (existing.Value.IntervalStart < added.Value.IntervalStart)
+                        {
+                            yield return existing.Value;
+                            existing = null;
+                            continue;
+                        }
+                        break;
+                    }
+
+                    yield return added.Value;
+                    added = null;
+                }
+
+                while (tail.MoveNext())
+                {
+                    yield return tail.Current;
+                }
+            }
+        }
+
         private static IEnumerable<MappedInterval<T>> Rebuild(IReadOnlyList<MappedInterval<T>> current, IReadOnlyList<MappedInterval<T>> addition)
         {
-            var set = current.Concat(addition).OrderBy(i => i.IntervalStart);
+            var set = GhettoMergeSort(current, addition);
 
             MappedInterval<T>? pending = null;
 
