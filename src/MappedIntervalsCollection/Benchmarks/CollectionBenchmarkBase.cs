@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Contract;
+using MappedIntervalsCollection;
 
 namespace Console.Benchmarks
 {
@@ -21,7 +23,11 @@ namespace Console.Benchmarks
 
         public static IEnumerable<object> CreateCollections()
         {
+#if BENCHMARKING_OUTSIDE
+            return MefDlyaBednyx.GetPlugins(new ConsoleLogger()).Select(p => new CollectionDescription(p));
+#else
             return CollectionBag.Collections;
+#endif
         }
 
         protected virtual void AfterCollectionCreation()
