@@ -81,7 +81,7 @@ namespace DenysPlugin
             }
         }
 
-        private static IEnumerable<MappedInterval<T>> GhettoMergeSort(IReadOnlyList<MappedInterval<T>> current, IReadOnlyList<MappedInterval<T>> addition)
+        private static IEnumerable<MappedInterval<T>> GhettoMergeSort(IEnumerable<MappedInterval<T>> current, IEnumerable<MappedInterval<T>> addition)
         {
             using (var existingEnumerator = current.GetEnumerator())
             using (var addedEnumerator = addition.GetEnumerator())
@@ -116,14 +116,14 @@ namespace DenysPlugin
                         break;
                     }
 
+                    yield return existing.Value;
+                    existing = null;
+
                     if (!added.HasValue)
                     {
                         tail = existingEnumerator;
                         break;
                     }
-
-                    yield return existing.Value;
-                    existing = null;
 
                     while (existingEnumerator.MoveNext())
                     {
@@ -148,7 +148,7 @@ namespace DenysPlugin
             }
         }
 
-        private static IEnumerable<MappedInterval<T>> Rebuild(IReadOnlyList<MappedInterval<T>> current, IReadOnlyList<MappedInterval<T>> addition)
+        private static IEnumerable<MappedInterval<T>> Rebuild(IEnumerable<MappedInterval<T>> current, IEnumerable<MappedInterval<T>> addition)
         {
             var set = GhettoMergeSort(current, addition);
 
