@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Order;
 using Contract;
 
 namespace Console.Benchmarks
 {
     // [HardwareCounters] // Does not work in in-process mode :(
     [MemoryDiagnoser]
+    [Orderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared)]
     [InProcess] // It is now run in-process only, as separate executable won't load plugins and fail.
     public class RealSinglePutScenarios<TPayload> : CollectionBenchmarkBase<TPayload>
         where TPayload : new()
