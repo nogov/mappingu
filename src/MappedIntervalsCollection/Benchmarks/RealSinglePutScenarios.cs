@@ -8,6 +8,8 @@ using Contract;
 
 namespace Console.Benchmarks
 {
+    // [HardwareCounters] // Does not work in in-process mode :(
+    [MemoryDiagnoser]
     [InProcess] // It is now run in-process only, as separate executable won't load plugins and fail.
     public class RealSinglePutScenarios<TPayload> : CollectionBenchmarkBase<TPayload>
         where TPayload : new()
@@ -17,16 +19,13 @@ namespace Console.Benchmarks
         private MappedInterval<TPayload>[] _shuffled;
         private Tuple<int, int>[] _ranges;
 
-        [Params(DataSource.Glasses2)]
-        //[ParamsAllValues]
+        [ParamsAllValues]
         public DataSource Source { get; set; }
 
-        [Params(DataFilter.IvtFixation)]
-        //[ParamsAllValues]
+        [ParamsAllValues]
         public DataFilter Filter { get; set; }
 
-        [Params(10)]
-        //[Params(100, 1000)]
+        [Params(1000)]
         public int Count { get; set; }
 
         [GlobalSetup]
