@@ -7,33 +7,46 @@ namespace DenysPlugin
 {
     internal sealed class Storage<T> : IMappedIntervalsCollection<T>
     {
-        private IReadOnlyList<MappedInterval<T>> _intervals = new MappedInterval<T>[0];
+        private List<MappedInterval<T>> _current = new List<MappedInterval<T>>();
+        private List<MappedInterval<T>> _old = new List<MappedInterval<T>>();
 
-        public int Count => _intervals.Count;
+        public int Count => _current.Count;
 
         public void Put(IReadOnlyList<MappedInterval<T>> newIntervals)
         {
-            _intervals = Rebuild(_intervals, newIntervals).ToArray();
+            PrepareNextGeneration();
+            _current.AddRange(Rebuild(_old, newIntervals));
+            //_intervals = Rebuild(_intervals, newIntervals).ToArray();
         }
 
         public void Delete(long from, long to)
         {
-            _intervals = Slice(_intervals, from, to).ToArray();
+            PrepareNextGeneration();
+            _current.AddRange(Slice(_old, from, to));
+            //_intervals = Slice(_intervals, from, to).ToArray();
         }
 
         public IEnumerator<MappedInterval<T>> GetEnumerator(long from)
         {
-            return _intervals.Where(i => i.IntervalEnd >= from).GetEnumerator();
+            return _current.Where(i => i.IntervalEnd >= from).GetEnumerator();
         }
 
         public IEnumerator<MappedInterval<T>> GetEnumerator()
         {
-            return _intervals.GetEnumerator();
+            return _current.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        private void PrepareNextGeneration()
+        {
+            var temp = _old;
+            _old = _current;
+            _current = temp;
+            _current.Clear();
         }
 
         private static IEnumerable<MappedInterval<T>> Slice(IReadOnlyList<MappedInterval<T>> current, long from, long to)
