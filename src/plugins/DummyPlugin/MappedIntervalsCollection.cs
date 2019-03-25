@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Contract;
@@ -128,7 +129,7 @@ namespace DummyPlugin
                     }
                 }
 
-                return (int)(interval1.Start - interval2.Start);
+                return interval1.Start.CompareTo(interval2.Start);
             }
 
             private static bool IsCompletelyWithin(Hueta interval1, Hueta interval2)
