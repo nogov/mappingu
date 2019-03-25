@@ -26,7 +26,7 @@ namespace Console.Benchmarks
         public void Setup()
         {
             _input = new MappedInterval<TPayload>[Count];
-            DataGeneration.Fill(_input, InputSorting, InputOverlapping, new TPayload());
+            DataGeneration.Fill(InputSorting, InputOverlapping, new TPayload(), _input);
         }
 
         [Benchmark]

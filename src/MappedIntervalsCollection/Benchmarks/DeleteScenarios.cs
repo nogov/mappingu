@@ -26,7 +26,7 @@ namespace Console.Benchmarks
         {
             var dummy = new TPayload();
             _toBeDeleted = new MappedInterval<TPayload>[Count];
-            DataGeneration.Fill(_toBeDeleted, DeletionPattern, Overlapping.Yes, dummy);
+            DataGeneration.Fill(DeletionPattern, Overlapping.Yes, dummy, _toBeDeleted);
         }
 
         protected override void AfterCollectionCreation()
@@ -43,7 +43,7 @@ namespace Console.Benchmarks
                 case PreDeleteState.Random:
                     var inputs = new MappedInterval<TPayload>[Count];
                     var sorting = InitialState == PreDeleteState.Random ? Sorting.Random : Sorting.Ascending;
-                    DataGeneration.Fill(inputs, sorting, Overlapping.No, dummy);
+                    DataGeneration.Fill(sorting, Overlapping.No, dummy, inputs);
                     Collection.Put(inputs);
                     break;
             }

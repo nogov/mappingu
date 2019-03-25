@@ -26,7 +26,7 @@ namespace Console.Benchmarks
         public void Setup()
         {
             _input = new MappedInterval<TPayload>[Count];
-            var mm = DataGeneration.Fill(_input, InputSorting, InputOverlapping, new TPayload());
+            var mm = DataGeneration.Fill(InputSorting, InputOverlapping, new TPayload(), _input);
             _min = mm.Item1 - Nudge(mm.Item1);
             _max = mm.Item2 + Nudge(mm.Item2);
         }
