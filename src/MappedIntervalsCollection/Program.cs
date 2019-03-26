@@ -15,8 +15,10 @@ namespace Console
             var tests = new Tests.Suite(logger, plugins);
             tests.Run();
 
+#if !DEBUG
             var benchmarks = new Benchmarks.Driver(logger, plugins);
             benchmarks.Run();
+#endif
 
             System.Console.ReadKey();
         }
