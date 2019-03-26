@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FirstbornStorage.cs" />
+    <Compile Include="FirstbornStorageFactory.cs" />
     <Compile Include="StraightforwardStorageFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StraightforwardStorage.cs" />

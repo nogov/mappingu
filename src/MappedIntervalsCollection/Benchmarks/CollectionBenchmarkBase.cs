@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Contract;
-using MappedIntervalsCollection;
 
 namespace Console.Benchmarks
 {
