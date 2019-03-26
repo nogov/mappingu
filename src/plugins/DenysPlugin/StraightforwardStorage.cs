@@ -5,7 +5,7 @@ using Contract;
 
 namespace DenysPlugin
 {
-    internal sealed class Storage<T> : IMappedIntervalsCollection<T>
+    internal sealed class StraightforwardStorage<T> : IMappedIntervalsCollection<T>
     {
         private List<MappedInterval<T>> _current = new List<MappedInterval<T>>();
         private List<MappedInterval<T>> _old = new List<MappedInterval<T>>();
